@@ -1,48 +1,84 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Brain, Mail, Lock, User, Chrome } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Brain, Mail, Lock, User, Chrome, ArrowLeft } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Auth = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const { signIn, signUp, isLoading } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Login attempt:', loginData);
-      setIsLoading(false);
-      // Add your login logic here
-    }, 1500);
+    try {
+      await signIn(loginData.email, loginData.password);
+      toast({
+        title: "Welcome back!",
+        description: "You have been successfully signed in.",
+      });
+      navigate('/dashboard');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign in. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log('Register attempt:', registerData);
-      setIsLoading(false);
-      // Add your registration logic here
-    }, 1500);
+    if (registerData.password !== registerData.confirmPassword) {
+      toast({
+        title: "Error",
+        description: "Passwords do not match.",
+        variant: "destructive",
+      });
+      return;
+    }
+    try {
+      await signUp(registerData.name, registerData.email, registerData.password);
+      toast({
+        title: "Account created!",
+        description: "Welcome to NoteNexus!",
+      });
+      navigate('/dashboard');
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create account. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleGoogleAuth = () => {
     console.log('Google OAuth initiated');
-    // Add Google OAuth logic here
+    toast({
+      title: "Coming Soon",
+      description: "Google authentication will be available soon!",
+    });
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Back Button */}
+        <div className="mb-6 animate-fade-in">
+          <Link to="/" className="inline-flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Home</span>
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
           <Link to="/" className="inline-flex items-center space-x-2 mb-6 group">

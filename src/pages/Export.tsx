@@ -1,11 +1,10 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileText, Brain, CheckCircle, Loader } from "lucide-react";
+import { Download, FileText, Brain, CheckCircle, Loader, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Export = () => {
@@ -73,14 +72,18 @@ const Export = () => {
       {/* Header */}
       <header className="border-b bg-background/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
+          <div className="flex items-center space-x-4">
+            <Link to="/" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back</span>
+            </Link>
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <Brain className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               NoteNexus
             </span>
-          </Link>
+          </div>
           <Link to="/auth">
             <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50">
               Sign In
