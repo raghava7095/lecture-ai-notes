@@ -1,12 +1,14 @@
-
-import { useState } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, RotateCcw, ChevronLeft, ChevronRight, Brain, Download } from "lucide-react";
-import { Link } from "react-router-dom";
+import { BookOpen, Play, RotateCcw, Download, Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import Header from "@/components/shared/Header";
 
 const Flashcards = () => {
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const [currentCard, setCurrentCard] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -41,24 +43,7 @@ const Flashcards = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      {/* Header */}
-      <header className="border-b bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              NoteNexus
-            </span>
-          </Link>
-          <Link to="/auth">
-            <Button variant="outline" className="border-blue-200 text-blue-600 hover:bg-blue-50">
-              Sign In
-            </Button>
-          </Link>
-        </div>
-      </header>
+      <Header title="Smart Flashcards" />
 
       <div className="container mx-auto px-4 py-12">
         {/* Page Header */}
