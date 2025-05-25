@@ -111,8 +111,39 @@ export default {
 				'fade-in': 'fade-in 0.6s ease-out',
 				'float': 'float 3s ease-in-out infinite',
 				'pulse-slow': 'pulse-slow 2s ease-in-out infinite'
+			},
+			perspective: {
+				'1000': '1000px',
+			},
+			transformStyle: {
+				'preserve-3d': 'preserve-3d',
+			},
+			backfaceVisibility: {
+				'hidden': 'hidden',
+			},
+			rotate: {
+				'y-180': 'rotateY(180deg)',
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }: { addUtilities: Function }) {
+			const newUtilities = {
+				'.perspective-1000': {
+					perspective: '1000px',
+				},
+				'.transform-style-preserve-3d': {
+					transformStyle: 'preserve-3d',
+				},
+				'.backface-hidden': {
+					backfaceVisibility: 'hidden',
+				},
+				'.rotate-y-180': {
+					transform: 'rotateY(180deg)',
+				}
+			}
+			addUtilities(newUtilities)
+		}
+	],
 } satisfies Config;
