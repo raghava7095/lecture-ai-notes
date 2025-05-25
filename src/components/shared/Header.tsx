@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
-import { Brain, ArrowLeft, Sun, Moon, User, LogOut } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { GraduationCap, ArrowLeft, Sun, Moon, User, LogOut } from "lucide-react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -18,14 +18,35 @@ interface HeaderProps {
   backPath?: string;
 }
 
-const Header = ({ title, showBack = true, backPath = "/" }: HeaderProps) => {
+const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
   const { theme, toggleTheme } = useTheme();
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Determine the back path based on current location
+  const getBackPath = () => {
+    if (backPath) return backPath;
+    
+    // If user is authenticated, go back to dashboard
+    if (user) {
+      if (location.pathname === '/dashboard') return '/';
+      return '/dashboard';
+    }
+    
+    // For non-authenticated users
+    if (location.pathname === '/get-started') return '/intro';
+    if (location.pathname === '/auth') return '/get-started';
+    return '/intro';
+  };
 
   const handleSignOut = () => {
     signOut();
-    navigate('/');
+    navigate('/intro');
+  };
+
+  const handleBack = () => {
+    navigate(getBackPath());
   };
 
   return (
@@ -33,14 +54,14 @@ const Header = ({ title, showBack = true, backPath = "/" }: HeaderProps) => {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           {showBack && (
-            <Link to={backPath} className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors">
+            <Button variant="ghost" onClick={handleBack} className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors">
               <ArrowLeft className="w-4 h-4" />
               <span>Back</span>
-            </Link>
+            </Button>
           )}
-          <Link to={user ? "/dashboard" : "/"} className="flex items-center space-x-2">
+          <Link to={user ? "/dashboard" : "/intro"} className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-              <Brain className="w-5 h-5 text-white" />
+              <GraduationCap className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               NoteNexus
@@ -49,7 +70,33 @@ const Header = ({ title, showBack = true, backPath = "/" }: HeaderProps) => {
           {title && <span className="text-lg font-semibold">{title}</span>}
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-4">
+          {/* Navigation Menu for authenticated users */}
+          {user && (
+            <nav className="hidden md:flex items-center space-x-1">
+              <Link to="/summaries">
+                <Button variant="ghost" className="text-sm">
+                  Summaries
+                </Button>
+              </Link>
+              <Link to="/flashcards">
+                <Button variant="ghost" className="text-sm">
+                  Flashcards
+                </Button>
+              </Link>
+              <Link to="/quizzes">
+                <Button variant="ghost" className="text-sm">
+                  Quizzes
+                </Button>
+              </Link>
+              <Link to="/export">
+                <Button variant="ghost" className="text-sm">
+                  Export
+                </Button>
+              </Link>
+            </nav>
+          )}
+
           <Button
             variant="ghost"
             size="icon"
