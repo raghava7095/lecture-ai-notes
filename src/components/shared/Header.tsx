@@ -1,9 +1,10 @@
 
 import { Button } from "@/components/ui/button";
-import { GraduationCap, ArrowLeft, Sun, Moon, User, LogOut, Menu } from "lucide-react";
+import { GraduationCap, ArrowLeft, Sun, Moon, User, LogOut, Menu, X } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,13 +13,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 interface HeaderProps {
   title?: string;
@@ -31,6 +29,7 @@ const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
   // Determine the back path based on current location
   const getBackPath = () => {
@@ -57,25 +56,50 @@ const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
     navigate(getBackPath());
   };
 
-  const NavigationLinks = () => (
+  const NavigationLinks = ({ mobile = false }) => (
     <>
-      <Link to="/summaries">
-        <Button variant="ghost" className="text-sm w-full justify-start">
+      <Link 
+        to="/dashboard" 
+        onClick={() => mobile && setIsOpen(false)}
+        className={mobile ? "block" : ""}
+      >
+        <Button variant="ghost" className={`text-sm ${mobile ? 'w-full justify-start h-12' : ''}`}>
+          Dashboard
+        </Button>
+      </Link>
+      <Link 
+        to="/summaries" 
+        onClick={() => mobile && setIsOpen(false)}
+        className={mobile ? "block" : ""}
+      >
+        <Button variant="ghost" className={`text-sm ${mobile ? 'w-full justify-start h-12' : ''}`}>
           Summaries
         </Button>
       </Link>
-      <Link to="/flashcards">
-        <Button variant="ghost" className="text-sm w-full justify-start">
+      <Link 
+        to="/flashcards" 
+        onClick={() => mobile && setIsOpen(false)}
+        className={mobile ? "block" : ""}
+      >
+        <Button variant="ghost" className={`text-sm ${mobile ? 'w-full justify-start h-12' : ''}`}>
           Flashcards
         </Button>
       </Link>
-      <Link to="/quizzes">
-        <Button variant="ghost" className="text-sm w-full justify-start">
+      <Link 
+        to="/quizzes" 
+        onClick={() => mobile && setIsOpen(false)}
+        className={mobile ? "block" : ""}
+      >
+        <Button variant="ghost" className={`text-sm ${mobile ? 'w-full justify-start h-12' : ''}`}>
           Quizzes
         </Button>
       </Link>
-      <Link to="/export">
-        <Button variant="ghost" className="text-sm w-full justify-start">
+      <Link 
+        to="/export" 
+        onClick={() => mobile && setIsOpen(false)}
+        className={mobile ? "block" : ""}
+      >
+        <Button variant="ghost" className={`text-sm ${mobile ? 'w-full justify-start h-12' : ''}`}>
           Export
         </Button>
       </Link>
@@ -119,28 +143,41 @@ const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
             {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
 
-          {/* Mobile Navigation Drawer for authenticated users */}
+          {/* Mobile Navigation Sheet for authenticated users */}
           {user && (
             <div className="md:hidden">
-              <Drawer>
-                <DrawerTrigger asChild>
-                  <Button variant="ghost" size="icon">
+              <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                <SheetTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="hover:scale-110 transition-transform duration-200"
+                  >
                     <Menu className="h-5 w-5" />
                   </Button>
-                </DrawerTrigger>
-                <DrawerContent>
-                  <DrawerHeader>
-                    <DrawerTitle>Navigation</DrawerTitle>
-                  </DrawerHeader>
-                  <div className="px-4 pb-4 space-y-2">
-                    <DrawerClose asChild>
-                      <div className="space-y-2">
-                        <NavigationLinks />
-                      </div>
-                    </DrawerClose>
+                </SheetTrigger>
+                <SheetContent 
+                  side="right" 
+                  className="w-[50%] sm:w-[350px] p-0 animate-slide-in-right"
+                >
+                  <div className="flex flex-col h-full">
+                    <div className="flex items-center justify-between p-6 border-b">
+                      <h2 className="text-lg font-semibold">Navigation</h2>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setIsOpen(false)}
+                        className="hover:scale-110 transition-transform duration-200"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="flex-1 py-6 px-4 space-y-2">
+                      <NavigationLinks mobile={true} />
+                    </div>
                   </div>
-                </DrawerContent>
-              </Drawer>
+                </SheetContent>
+              </Sheet>
             </div>
           )}
 
