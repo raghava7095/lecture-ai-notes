@@ -135,7 +135,7 @@ const Intro = () => {
               }
             ].map((item, index) => (
               <div key={index} className="text-center animate-fade-in" style={{ animationDelay: `${index * 200}ms` }}>
-                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold">
+                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl font-bold animate-bounce" style={{ animationDelay: `${index * 300}ms`, animationDuration: '2s' }}>
                   {item.step}
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{item.title}</h3>

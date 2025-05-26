@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { GraduationCap, ArrowLeft, Sun, Moon, User, LogOut } from "lucide-react";
+import { GraduationCap, ArrowLeft, Sun, Moon, User, LogOut, Menu } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,6 +11,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 interface HeaderProps {
   title?: string;
@@ -49,6 +57,31 @@ const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
     navigate(getBackPath());
   };
 
+  const NavigationLinks = () => (
+    <>
+      <Link to="/summaries">
+        <Button variant="ghost" className="text-sm w-full justify-start">
+          Summaries
+        </Button>
+      </Link>
+      <Link to="/flashcards">
+        <Button variant="ghost" className="text-sm w-full justify-start">
+          Flashcards
+        </Button>
+      </Link>
+      <Link to="/quizzes">
+        <Button variant="ghost" className="text-sm w-full justify-start">
+          Quizzes
+        </Button>
+      </Link>
+      <Link to="/export">
+        <Button variant="ghost" className="text-sm w-full justify-start">
+          Export
+        </Button>
+      </Link>
+    </>
+  );
+
   return (
     <header className="border-b bg-background/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -70,29 +103,10 @@ const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
         </div>
 
         <div className="flex items-center space-x-4">
-          {/* Navigation Menu for authenticated users */}
+          {/* Navigation Menu for authenticated users - Desktop */}
           {user && (
             <nav className="hidden md:flex items-center space-x-1">
-              <Link to="/summaries">
-                <Button variant="ghost" className="text-sm">
-                  Summaries
-                </Button>
-              </Link>
-              <Link to="/flashcards">
-                <Button variant="ghost" className="text-sm">
-                  Flashcards
-                </Button>
-              </Link>
-              <Link to="/quizzes">
-                <Button variant="ghost" className="text-sm">
-                  Quizzes
-                </Button>
-              </Link>
-              <Link to="/export">
-                <Button variant="ghost" className="text-sm">
-                  Export
-                </Button>
-              </Link>
+              <NavigationLinks />
             </nav>
           )}
 
@@ -105,12 +119,37 @@ const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
             {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </Button>
 
+          {/* Mobile Navigation Drawer for authenticated users */}
+          {user && (
+            <div className="md:hidden">
+              <Drawer>
+                <DrawerTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle>Navigation</DrawerTitle>
+                  </DrawerHeader>
+                  <div className="px-4 pb-4 space-y-2">
+                    <DrawerClose asChild>
+                      <div className="space-y-2">
+                        <NavigationLinks />
+                      </div>
+                    </DrawerClose>
+                  </div>
+                </DrawerContent>
+              </Drawer>
+            </div>
+          )}
+
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center space-x-2">
                   <User className="w-4 h-4" />
-                  <span>{user.name}</span>
+                  <span className="hidden sm:inline">{user.name}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
