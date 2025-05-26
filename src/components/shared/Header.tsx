@@ -158,11 +158,11 @@ const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
                 </SheetTrigger>
                 <SheetContent 
                   side="right" 
-                  className="w-[50%] sm:w-[350px] p-0 animate-slide-in-right"
+                  className="w-[50%] sm:w-[300px] p-0 animate-slide-in-right [&>button]:hidden"
                 >
                   <div className="flex flex-col h-full">
                     <div className="flex items-center justify-between p-6 border-b">
-                      <h2 className="text-lg font-semibold">Navigation</h2>
+                      <h2 className="text-lg font-semibold">Menu</h2>
                       <Button
                         variant="ghost"
                         size="icon"
