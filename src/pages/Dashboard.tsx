@@ -1,21 +1,36 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { GraduationCap, BookOpen, CreditCard, FileDown, Plus, TrendingUp, Clock, CheckCircle } from "lucide-react";
+import { GraduationCap, BookOpen, CreditCard, FileDown, Plus, TrendingUp, Clock, CheckCircle, Play } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 import Header from "@/components/shared/Header";
 
 const Dashboard = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Redirect if not authenticated
   if (!user) {
     navigate('/auth');
     return null;
   }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsProcessing(true);
+    console.log("Processing YouTube URL:", youtubeUrl);
+
+    // Simulate processing
+    setTimeout(() => {
+      setIsProcessing(false);
+    }, 3000);
+  };
 
   const recentVideos = [
     {
@@ -86,7 +101,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-      <Header title="Dashboard" showBack={false} />
+      <Header showBack={false} />
 
       <div className="container mx-auto px-4 py-12">
         {/* Welcome Section */}
@@ -98,6 +113,53 @@ const Dashboard = () => {
             Ready to transform more videos into learning materials?
           </p>
         </div>
+
+        {/* YouTube Input Section */}
+        <Card className="mb-8 animate-fade-in transform hover:scale-105 transition-all duration-300">
+          <CardHeader>
+            <CardTitle>Transform YouTube Videos into Study Materials</CardTitle>
+            <CardDescription>Enter a YouTube URL to generate summaries, flashcards, and quizzes</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="flex items-center space-x-4">
+              <Input
+                type="url"
+                placeholder="Paste YouTube URL here"
+                value={youtubeUrl}
+                onChange={(e) => setYoutubeUrl(e.target.value)}
+                className="flex-1"
+              />
+              <Button type="submit" disabled={isProcessing} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
+                {isProcessing ? (
+                  <>
+                    <Clock className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <Play className="mr-2 h-4 w-4" />
+                    Generate
+                  </>
+                )}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* Demo Video Section */}
+        <Card className="mb-8 animate-fade-in transform hover:scale-105 transition-all duration-300" style={{ animationDelay: '100ms' }}>
+          <CardHeader>
+            <CardTitle>🎬 Demo: See NoteNexus in Action</CardTitle>
+            <CardDescription>Watch how NoteNexus transforms a YouTube video into comprehensive study materials</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-lg p-8 text-center">
+              <Play className="w-16 h-16 mx-auto mb-4 text-blue-600" />
+              <h3 className="text-lg font-semibold mb-2">Demo Video Coming Soon</h3>
+              <p className="text-muted-foreground">Experience the full power of AI-driven learning</p>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Stats Grid */}
         <div className="grid md:grid-cols-4 gap-6 mb-12">
@@ -116,10 +178,6 @@ const Dashboard = () => {
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-bold">Quick Actions</h2>
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Process New Video
-            </Button>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {quickActions.map((action, index) => (
@@ -150,7 +208,7 @@ const Dashboard = () => {
           <CardContent>
             <div className="space-y-4">
               {recentVideos.map((video, index) => (
-                <div key={index} className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors">
+                <div key={index} className="flex items-center justify-between p-4 rounded-lg border hover:bg-muted/50 transition-colors transform hover:scale-105 duration-300">
                   <div className="flex items-center space-x-4">
                     <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                       {video.status === 'Completed' ? (

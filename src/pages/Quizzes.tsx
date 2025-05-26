@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -79,7 +80,7 @@ const Quizzes = () => {
 
       <div className="container mx-auto px-4 py-12">
         {/* Input Section */}
-        <Card className="mb-8 animate-fade-in">
+        <Card className="mb-8 animate-fade-in transform hover:scale-105 transition-all duration-300">
           <CardHeader>
             <CardTitle>Generate a Quiz</CardTitle>
             <CardDescription>Enter a YouTube URL to generate a quiz based on the video content</CardDescription>
@@ -93,7 +94,7 @@ const Quizzes = () => {
                 onChange={(e) => setYoutubeUrl(e.target.value)}
                 className="flex-1"
               />
-              <Button type="submit" disabled={isProcessing}>
+              <Button type="submit" disabled={isProcessing} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 {isProcessing ? (
                   <>
                     <Clock className="mr-2 h-4 w-4 animate-spin" />
@@ -111,7 +112,7 @@ const Quizzes = () => {
         </Card>
 
         {/* Quiz Section */}
-        <Card className="animate-fade-in">
+        <Card className="animate-fade-in transform hover:scale-105 transition-all duration-300" style={{ animationDelay: '100ms' }}>
           <CardHeader>
             <CardTitle>Quiz</CardTitle>
             <CardDescription>Answer the questions below</CardDescription>
@@ -127,7 +128,7 @@ const Quizzes = () => {
                 </div>
                 <RadioGroup onValueChange={handleAnswerSelect} value={selectedAnswer} className="space-y-2">
                   {mockQuestions[currentQuestion].options.map((option, index) => (
-                    <div key={index} className="flex items-center space-x-2">
+                    <div key={index} className="flex items-center space-x-2 hover:bg-muted/50 p-2 rounded transition-colors">
                       <RadioGroupItem value={option} id={`option-${index}`} className="peer h-4 w-4 shrink-0 rounded-full border border-primary ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" />
                       <Label htmlFor={`option-${index}`} className="cursor-pointer peer-data-[state=checked]:text-primary">
                         {option}
@@ -135,18 +136,18 @@ const Quizzes = () => {
                     </div>
                   ))}
                 </RadioGroup>
-                <Button onClick={handleNextQuestion} disabled={showResult} className="mt-4">
+                <Button onClick={handleNextQuestion} disabled={showResult} className="mt-4 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600">
                   {showResult ? "Loading next question..." : "Next Question"}
                 </Button>
                 {showResult && (
-                  <div className="mt-4">
+                  <div className="mt-4 animate-fade-in">
                     {selectedAnswer === mockQuestions[currentQuestion].correctAnswer ? (
-                      <Badge variant="outline" className="bg-green-500 text-white">
+                      <Badge variant="outline" className="bg-green-500 text-white animate-scale-in">
                         <CheckCircle className="mr-2 h-4 w-4" />
                         Correct!
                       </Badge>
                     ) : (
-                      <Badge variant="destructive" className="bg-red-500 text-white">
+                      <Badge variant="destructive" className="bg-red-500 text-white animate-scale-in">
                         <XCircle className="mr-2 h-4 w-4" />
                         Incorrect! The correct answer was: {mockQuestions[currentQuestion].correctAnswer}
                       </Badge>
@@ -155,8 +156,8 @@ const Quizzes = () => {
                 )}
               </>
             ) : (
-              <div className="text-center">
-                <Trophy className="mx-auto h-12 w-12 text-yellow-500 mb-4" />
+              <div className="text-center animate-fade-in">
+                <Trophy className="mx-auto h-12 w-12 text-yellow-500 mb-4 animate-pulse" />
                 <p className="text-lg">No quiz generated yet. Please enter a YouTube URL to generate a quiz.</p>
               </div>
             )}

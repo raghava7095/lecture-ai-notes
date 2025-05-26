@@ -67,7 +67,6 @@ const Header = ({ title, showBack = true, backPath }: HeaderProps) => {
               NoteNexus
             </span>
           </Link>
-          {title && <span className="text-lg font-semibold">{title}</span>}
         </div>
 
         <div className="flex items-center space-x-4">
